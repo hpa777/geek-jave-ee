@@ -1,6 +1,7 @@
 package ru.geekbrains.pages;
 
 import ru.geekbrains.chunks.PageTitleServlet;
+import ru.geekbrains.persist.ProductRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,5 +21,6 @@ public class ProductServlet extends HttpServlet {
         getServletContext().getRequestDispatcher("/page_title").include(req, resp);
         getServletContext().getRequestDispatcher("/main_menu").include(req, resp);
     }
+
 
 }
