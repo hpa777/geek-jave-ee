@@ -15,7 +15,8 @@
     <title><ui:insert name="title"></ui:insert></title>
 </h:head>
 
-<h:head>
+<h:body>
+    <ui:insert name="metadata"></ui:insert>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">EShop</a>
 
@@ -26,13 +27,21 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">List</a>
+                <li class="nav-item #{pageName == 'Product' ? 'active' : ''}">
+                    <h:link styleClass="nav-link" value="Products" outcome="product"/>
+                </li>
+                <li class="nav-item #{pageName == 'Category' ? 'active' : ''}">
+                    <h:link styleClass="nav-link" value="Categories" outcome="category"/>
+                </li>
+                <li class="nav-item #{pageName == 'Cart' ? 'active' : ''}">
+                    <h:link styleClass="nav-link" value="Cart" outcome="cart"/>
+                </li>
+                <li class="nav-item #{pageName == 'User' ? 'active' : ''}">
+                    <h:link styleClass="nav-link" value="Users" outcome="user"/>
                 </li>
             </ul>
         </div>
     </nav>
-
     <div class="container">
         <ui:insert name="content"></ui:insert>
     </div>
@@ -48,5 +57,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
-</h:head>
+</h:body>
 </html>

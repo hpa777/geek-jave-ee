@@ -1,10 +1,10 @@
 package ru.geekbrains.controller;
 
-import ru.geekbrains.persist.Entity;
 import ru.geekbrains.persist.Product;
 import ru.geekbrains.persist.ProductRepository;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -19,6 +19,12 @@ public class ProductController implements Serializable {
 
     private Product product;
 
+    private List<Product> products;
+
+    public void preloadData(ComponentSystemEvent componentSystemEvent) {
+        products = productRepository.findAll();
+    }
+
     public Product getProduct() {
         return product;
     }
@@ -32,8 +38,8 @@ public class ProductController implements Serializable {
         return "/product_form.xhtml?faces-redirect-true";
     }
 
-    public List<Entity> getAllProducts() {
-        return productRepository.findAll();
+    public List<Product> getAllProducts() {
+        return products;
     }
 
     public String editProduct(Product product) {

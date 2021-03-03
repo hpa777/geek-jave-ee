@@ -7,6 +7,7 @@ import javax.inject.Named;
 import java.io.Serializable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -14,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @SessionScoped
 public class CartController implements Serializable {
 
-    private HashMap<Product, Integer> productMap = new HashMap<>();
+    private final Map<Product, Integer> productMap = new HashMap<>();
 
     public List<Map.Entry<Product, Integer>> getProductMap() {
         Set<Map.Entry<Product, Integer>> productSet = productMap.entrySet();

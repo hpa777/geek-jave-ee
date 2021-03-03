@@ -1,16 +1,32 @@
 package ru.geekbrains.persist;
-
+import javax.persistence.*;
 import java.math.BigDecimal;
 
-public class Product implements Entity {
+@Entity
+@Table(name = "products")
+@NamedQueries({
+        @NamedQuery(name = "findAllProducts", query = "from Product"),
+        @NamedQuery(name = "deleteByIdProduct", query = "delete from Product p where p.id = :id"),
+        @NamedQuery(name = "countAllProducts", query = "select count(*) from Product")
+})
+public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String name;
 
+    @Column(length = 1024)
     private String description;
 
+    @Column
     private BigDecimal price;
+
+
+    @ManyToOne
+    private Category category;
 
     public Product() {
     }
@@ -58,5 +74,14 @@ public class Product implements Entity {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
 
 }

@@ -2,7 +2,11 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:param name="pageName" value="User"></ui:param>
     <ui:define name="title">User List</ui:define>
+    <ui:define name="metadata">
+        <f:event listener="#{userController.preloadData}" type="preRenderView"></f:event>
+    </ui:define>
     <ui:define name="content">
         <h:form id="userForm">
             <div class="row py-2">
@@ -25,7 +29,7 @@
                         </h:column>
                         <h:column>
                             <f:facet name="header">Phone</f:facet>
-                            $#{user.phone}
+                            #{user.phone}
                         </h:column>
                         <h:column>
                             <f:facet name="header">Actions</f:facet>
