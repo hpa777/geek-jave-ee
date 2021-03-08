@@ -1,4 +1,6 @@
 package ru.geekbrains.persist;
+import ru.geekbrains.service.ProductRepresentation;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -41,6 +43,11 @@ public class Product {
         this.name = name;
         this.description = description;
         this.price = price;
+    }
+
+    public Product(ProductRepresentation prodRep, Category category) {
+        this(prodRep.getId(), prodRep.getName(), prodRep.getDescription(), prodRep.getPrice());
+        this.category = category;
     }
 
     public Long getId() {
