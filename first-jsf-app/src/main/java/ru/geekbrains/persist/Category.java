@@ -1,12 +1,30 @@
 package ru.geekbrains.persist;
 
-public class Category implements Entity {
+import javax.persistence.*;
+import java.util.List;
 
+@Entity
+@Table(name = "categories")
+@NamedQueries({
+        @NamedQuery(name = "findAllCategory", query = "from Category "),
+        @NamedQuery(name = "deleteByIdCategory", query = "delete from Category c where c.id = :id"),
+        @NamedQuery(name = "countAllCategory", query = "select count(*) from Category ")
+})
+public class Category {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String name;
 
+    @Column(length = 10124)
     private String description;
+
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "category")
+    private List<Product> products;
 
     public Category() {
     }
@@ -42,5 +60,14 @@ public class Category implements Entity {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
 
 }

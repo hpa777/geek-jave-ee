@@ -3,6 +3,7 @@ package ru.geekbrains.controller;
 import ru.geekbrains.persist.*;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -25,13 +26,19 @@ public class UserController implements Serializable {
 
     private User user;
 
+    private List<User> users;
+
+    public void preloadData(ComponentSystemEvent componentSystemEvent) {
+        users = userRepository.findAll();
+    }
+
     public String createUser() {
         this.user = new User();
         return "/user_form.xhtml?faces-redirect-true";
     }
 
-    public List<Entity> getAllUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUsers() {
+        return users;
     }
 
     public String editUser(User user) {
