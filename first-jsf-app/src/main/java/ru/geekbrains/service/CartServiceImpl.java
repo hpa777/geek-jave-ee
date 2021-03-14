@@ -1,7 +1,5 @@
 package ru.geekbrains.service;
 
-import ru.geekbrains.persist.Product;
-
 import javax.ejb.Stateful;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,7 +1,5 @@
 package ru.geekbrains.service;
 
-import ru.geekbrains.persist.Product;
-
 import javax.ejb.Local;
 import java.util.List;
 
