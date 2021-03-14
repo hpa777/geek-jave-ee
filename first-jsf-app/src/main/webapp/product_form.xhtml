@@ -18,6 +18,13 @@
                 <label>Price</label>
                 <h:inputText p:type="number" styleClass="form-control" id="price" value="#{productController.product.price}" placeholder="Enter price" />
             </div>
+            <div class="form-group">
+                <label>Category</label>
+                <h:selectOneListbox size="1" styleClass="form-control" id="productCategory" value="#{productController.product.categoryId}">
+                    <f:selectItems value="#{productController.categories}"
+                                   var="c" itemValue="#{c.id}" itemLabel="#{c.name}" itemLabelEscaped="true"/>
+                </h:selectOneListbox>
+            </div>
             <h:commandButton value="Submit" styleClass="btn btn-primary" action="#{productController.saveProduct}" />
         </h:form>
     </ui:define>
