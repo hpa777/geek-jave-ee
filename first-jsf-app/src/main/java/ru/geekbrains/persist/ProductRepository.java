@@ -18,8 +18,16 @@ public class ProductRepository {
         return entityManager.find(Product.class, id);
     }
 
+    public Product findByName(String name) {
+        return entityManager.createNamedQuery("findByNameProduct", Product.class).setParameter("name", name).getSingleResult();
+    }
+
     public List<Product> findAll() {
         return entityManager.createNamedQuery("findAllProducts", Product.class).getResultList();
+    }
+
+    public List<Product> findByCategoryId(Long id) {
+        return entityManager.createNamedQuery("findByCategoryIdProducts", Product.class).setParameter("id", id).getResultList();
     }
 
     public Long countAll() {
