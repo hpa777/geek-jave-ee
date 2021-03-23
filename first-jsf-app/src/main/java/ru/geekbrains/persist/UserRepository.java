@@ -3,69 +3,76 @@ package ru.geekbrains.persist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.SystemException;
-import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
+import java.io.Serializable;
 import java.util.List;
 
-@Named
-@ApplicationScoped
-public class UserRepository {
+@Stateless
+public class UserRepository implements Serializable {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductRepository.class);
+    private final Logger logger = LoggerFactory.getLogger(UserRepository.class);
 
     @PersistenceContext(unitName = "ds")
-    protected EntityManager entityManager;
+    protected EntityManager em;
+
+    public UserRepository() {
+    }
+
+    @TransactionAttribute
+    public User saveOrUpdate(User user) {
+        if (user.getId() == null) {
+            em.persist(user);
+            return user;
+        }
+        return em.merge(user);
+    }
+
+    @TransactionAttribute
+    public void delete(Long id) {
+        logger.info("Deleting user");
+
+        try {
+            User attached = findById(id);
+            if (attached != null) {
+                em.remove(attached);
+            }
+        } catch (Exception ex) {
+            logger.error("Error with entity class", ex);
+            throw new IllegalStateException(ex);
+        }
+    }
 
     public User findById(Long id) {
-        return entityManager.find(User.class, id);
+        return em.find(User.class, id);
     }
 
-    public List<User> findAll() {
-        return entityManager.createNamedQuery("findAllUsers", User.class).getResultList();
+    public boolean existsById(Long id) {
+        return findById(id) != null;
     }
 
-    public Long countAll() {
-        return entityManager.createNamedQuery("countAllUsers", Long.class).getSingleResult();
+    @TransactionAttribute
+    public List<User> getAllUsers() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<User> query = cb.createQuery(User.class);
+        Root<User> from = query.from(User.class);
+        from.fetch("roles", JoinType.LEFT);
+        query.select(from).distinct(true);
+
+        return em.createQuery(query).getResultList();
+
+//        return em.createQuery("select distinct u from User u left join fetch u.roles", User.class)
+//                .getResultList();
     }
 
-    @Transactional
-    public void saveOrUpdate(User user) {
-        if (user.getId() == null) {
-            entityManager.persist(user);
-        }
-        entityManager.merge(user);
+    public long getCount() {
+        return em.createQuery("select count(*) from User", Long.class)
+                .getSingleResult();
     }
-
-    @Transactional
-    public void deleteById(Long id) {
-        entityManager.createNamedQuery("deleteByIdUser").setParameter("id", id).executeUpdate();
-    }
-
-    @Resource
-    private UserTransaction userTransaction;
-
-    @PostConstruct
-    public void init() throws SystemException {
-        if (this.countAll() == 0) {
-            try {
-                userTransaction.begin();
-                this.saveOrUpdate(new User(null, "Admin", "admin@mail.su", "79104532312", "qwe123"));
-                this.saveOrUpdate(new User(null, "User", "user@mmm.rr", "79153453423", "zxc123"));
-                userTransaction.commit();
-            } catch (Exception ex) {
-                userTransaction.rollback();
-                logger.error("", ex);
-            }
-
-        }
-
-    }
-
 }

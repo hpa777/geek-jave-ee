@@ -1,0 +1,30 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="title">User</ui:define>
+    <ui:define name="content">
+        <h:form>
+            <div class="form-group">
+                <label>Login</label>
+                <h:inputText styleClass="form-control" id="login"
+                             value="#{userController.user.login}" placeholder="Enter login" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <h:inputText styleClass="form-control" id="password"
+                             value="#{userController.user.password}" placeholder="Enter password" />
+            </div>
+            <div class="form-group">
+                <h:selectManyCheckbox value="#{userController.user.userRolesId}"
+                                      styleClass="form-control">
+                    <f:selectItems value="#{userController.roles}"
+                                   var="r" itemValue="#{r.id}" itemLabel="#{r.name}" itemLabelEscaped="true"/>
+                </h:selectManyCheckbox>
+            </div>
+            <h:commandButton value="Submit" styleClass="btn btn-primary"
+                             action="#{userController.saveUser}" />
+        </h:form>
+    </ui:define>
+</ui:composition>

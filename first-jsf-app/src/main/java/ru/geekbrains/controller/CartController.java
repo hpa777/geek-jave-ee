@@ -6,7 +6,10 @@ import ru.geekbrains.service.ProductRepresentation;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 
 import java.util.*;
@@ -34,6 +37,14 @@ public class CartController implements Serializable {
 
     public void deleteProduct(ProductRepresentation product) {
         cartService.deleteProduct(product);
+    }
+
+    @Inject
+    private HttpSession httpSession;
+
+    public String logout() {
+        httpSession.invalidate();
+        return "/product_form.xhtml?faces-redirect-true";
     }
 
 }

@@ -1,94 +1,82 @@
 package ru.geekbrains.persist;
 
+import ru.geekbrains.service.UserRepr;
+
 import javax.persistence.*;
-import java.util.List;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@NamedQueries({
-        @NamedQuery(name = "findAllUsers", query = "from User"),
-        @NamedQuery(name = "deleteByIdUser", query = "delete from User u where u.id = :id"),
-        @NamedQuery(name = "countAllUsers", query = "select count(*) from User")
-})
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String name;
+    @Column(name = "login", unique = true, nullable = false)
+    private String login;
 
-    @Column
-    private String email;
-
-    @Column
-    private String phone;
-
-    @Column
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
-    private List<Order> orders;
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     public User() {
-
     }
 
-    public User(Long id, String name, String email, String phone, String password) {
+    public User(Long id, String login, String password) {
         this.id = id;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
+        this.login = login;
         this.password = password;
     }
 
+    public User(UserRepr user) {
+        this.id = user.getId();
+        this.login = user.getLogin();
+        this.password = user.getPassword();
+        this.roles = new HashSet<>();
+        user.getRoles().forEach(r -> roles.add(new Role(r)));
+    }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public String getLogin() {
+        return login;
     }
 
     public String getPassword() {
         return password;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
