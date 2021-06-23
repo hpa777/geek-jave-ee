@@ -28,7 +28,7 @@
     <div class="row py-2">
         <div class="col-12">
             <c:url value="/catalog/new" var="productNewUrl"/>
-            <a class="btn btn-primary" href="${productNewUrl}">Add Product</a>
+            <a class="btn btn-primary" href="${productNewUrl}">Добавить продукт</a>
         </div>
 
         <div class="col-12">
